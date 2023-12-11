@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  namespace: tp
+  name: service
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: Service
+  template:
+    metadata:
+      labels:
+        app: Service
+    spec:
+      containers:
+      - name: api
+        image: registry.cluster.wik.cloud/public/echo
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service
+  namespace: tp
+spec:
+  selector:
+    app: Service
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
